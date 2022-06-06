@@ -40,7 +40,9 @@ func NewID() (ID, error) {
 		return 0, fmt.Errorf("NewID randInt: %w", errRa)
 	}
 
-	rand := strconv.Itoa(int(random))[:4]
+	rand := strconv.Itoa(int(random))[:3]
+
+	// TODO: get length of random number and compensate with machine ID
 
 	parsed, errPa := strconv.ParseUint(time+pickNumbersFrom(machineID, 3)+pid[len(pid)-3:]+rand, 10, 64)
 	if errPa != nil {
