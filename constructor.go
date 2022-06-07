@@ -3,53 +3,42 @@ package linuxid
 import (
 	"errors"
 	"fmt"
-	"os"
 	"strconv"
 	"time"
 )
 
-type ID uint
+var _containerID string
 
-var _pid = os.Getpid()
-var _machineID string
-
-func getMachineID() string {
-	if len(_machineID) == 0 {
-		id, err := readMachineID()
+func getContainerID() string {
+	if len(_containerID) == 0 {
+		id, err := readContainerID()
 		if err != nil {
 			return ""
 		}
 
-		_machineID = id
+		_containerID = id
 	}
 
-	return _machineID
+	return _containerID
 }
 
-func NewID() (ID, error) {
-	machineID := getMachineID()
-	if len(machineID) == 0 {
+func NewID() (uint, error) {
+	containerID := getContainerID()
+	if len(containerID) == 0 {
 		return 0, errors.New("there was an error")
 	}
 
-	time := strconv.FormatInt(time.Now().Unix(), 10)
-	pid := strconv.Itoa(_pid)
+	now := strconv.FormatInt(time.Now().UnixNano(), 10)
 
-	random, errRa := randInt()
+	random, errRa := randInt(now[16:19])
 	if errRa != nil {
-		return 0, fmt.Errorf("NewID randInt: %w", errRa)
+		return 0, fmt.Errorf("NewID strconv.ParseUint: %w", errRa)
 	}
 
-	rand := strconv.Itoa(int(random))[:3]
-
-	// TODO: get length of random number and compensate with machine ID
-
-	parsed, errPa := strconv.ParseUint(time+pickNumbersFrom(machineID, 3)+pid[len(pid)-3:]+rand, 10, 64)
+	parsed, errPa := strconv.ParseUint(now[:11]+pickNumbersFrom(containerID, 5)+random, 10, 64)
 	if errPa != nil {
 		return 0, fmt.Errorf("NewID strconv.ParseUint: %w", errPa)
 	}
 
-	res := ID(parsed)
-
-	return res, nil
+	return uint(parsed), nil
 }

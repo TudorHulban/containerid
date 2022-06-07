@@ -1,12 +1,15 @@
 package linuxid
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/require"
 )
 
 func TestRandIntID(t *testing.T) {
-	_, errID := randInt()
+	val, errID := randInt("xxx")
 	require.NoError(t, errID)
+
+	fmt.Println(val)
 }
