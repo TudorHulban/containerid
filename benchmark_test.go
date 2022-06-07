@@ -3,7 +3,7 @@ package linuxid
 import "testing"
 
 // cpu: AMD Ryzen 5 5600U with Radeon Graphics
-// BenchmarkConstructor-12    	  983395	      2140 ns/op	     320 B/op	      11 allocs/op
+// BenchmarkConstructor-12    	 1896780	       794.5 ns/op	      71 B/op	       3 allocs/op
 
 func BenchmarkConstructor(b *testing.B) {
 	b.ResetTimer()

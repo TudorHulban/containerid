@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -40,7 +41,8 @@ func pickNumbersFrom(s string, howMany uint) string {
 }
 
 // randInt generates a random uint32 as 4 digit string
-func randInt(compensation string) (string, error) {
+// time cost is around 500 ns.
+func randInt() (string, error) {
 	buf := make([]byte, 3)
 
 	if _, err := rand.Reader.Read(buf); err != nil {
@@ -49,7 +51,7 @@ func randInt(compensation string) (string, error) {
 
 	res := uint32(buf[0])<<16 | uint32(buf[1])<<8 | uint32(buf[2])
 
-	return (fmt.Sprint(res) + compensation)[:4], nil
+	return strconv.Itoa(int(res)), nil
 }
 
 // readMachineID returns machine ID

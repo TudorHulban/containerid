@@ -16,7 +16,7 @@ func getContainerID() string {
 			return ""
 		}
 
-		_containerID = id
+		_containerID = pickNumbersFrom(id, 5)
 	}
 
 	return _containerID
@@ -30,12 +30,12 @@ func NewID() (uint, error) {
 
 	now := strconv.FormatInt(time.Now().UnixNano(), 10)
 
-	random, errRa := randInt(now[16:19])
+	random, errRa := randInt()
 	if errRa != nil {
 		return 0, fmt.Errorf("NewID strconv.ParseUint: %w", errRa)
 	}
 
-	parsed, errPa := strconv.ParseUint(now[:11]+pickNumbersFrom(containerID, 5)+random, 10, 64)
+	parsed, errPa := strconv.ParseUint((now[:11] + containerID + random + now[16:19])[:20], 10, 64)
 	if errPa != nil {
 		return 0, fmt.Errorf("NewID strconv.ParseUint: %w", errPa)
 	}

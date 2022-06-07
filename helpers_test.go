@@ -8,7 +8,7 @@ import (
 )
 
 func TestRandIntID(t *testing.T) {
-	val, errID := randInt("xxx")
+	val, errID := randInt()
 	require.NoError(t, errID)
 
 	fmt.Println(val)
